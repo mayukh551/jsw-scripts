@@ -11,12 +11,15 @@ const GET_LAST_DP_URL = "http://api.faclon.com:4000/lastDP?device=ABBLSCRSHR_A1&
 const payload = {
   devID: "ABBLSCRSHR_A1",
   sensorIDs: ["D0", "D3"],
-  sTime: 1763865947,
+  sTime: 1764842435,
   // eTime: moment().unix(),
-  eTime: 1764000000,
+  eTime: 1764900000,
 };
 
-const pileID = 'Pile_S1_80';
+const D0 = 0;
+const D3 = 1;
+
+const pileID = 'Pile_S2_86';
 
 async function fetchSensorData() {
   try {
@@ -28,6 +31,10 @@ async function fetchSensorData() {
     });
 
     const rawData = response.data?.data || [];
+
+    console.log({
+      rawData
+    })
 
     const groupedMap = {};
 
@@ -61,16 +68,14 @@ async function fetchSensorData() {
       return;
     }
 
-    const lastTimeUnixMs = moment(lastDP.time).valueOf();
-
     // ================================
     // ✅ 3️⃣ FINAL REQUIRED OUTPUT
     // ================================
     const finalOutput = {
-      time: lastTimeUnixMs,
+      time: windowLast15[windowLast15.length - 1].time,
       window: windowString,
-      D0: 0,
-      D3: 1,
+      D0,
+      D3,
       pileID,
       status: "Running",
       pileChange: {
